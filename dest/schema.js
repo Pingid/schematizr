@@ -24,10 +24,10 @@ var assemble = _temporalUndefined;
 var disassemble = _temporalUndefined;
 
 // FindById --------------------------------------------------------------------
-var FindById = _temporalUndefined;
+var findById = _temporalUndefined;
 
 // Find ------------------------------------------------------------------------
-var Find = _temporalUndefined;
+var find = _temporalUndefined;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -103,7 +103,7 @@ exports.disassemble = disassemble = function disassemble(json) {
 };
 
 exports.disassemble = _temporalAssertDefined(disassemble, 'disassemble', _temporalUndefined) && disassemble;
-exports.FindById = FindById = _ramda2['default'].curry(function (cb, json, id) {
+exports.findById = findById = _ramda2['default'].curry(function (cb, json, id) {
   var replaced = _temporalUndefined;
 
   replaced = function replaced(x) {
@@ -112,8 +112,8 @@ exports.FindById = FindById = _ramda2['default'].curry(function (cb, json, id) {
 
   return _ramda2['default'].compose(_temporalAssertDefined(removeNull, 'removeNull', _temporalUndefined) && removeNull, _temporalAssertDefined(iterator, 'iterator', _temporalUndefined) && iterator)(_temporalAssertDefined(replaced, 'replaced', _temporalUndefined) && replaced, json);
 });
-exports.FindById = _temporalAssertDefined(FindById, 'FindById', _temporalUndefined) && FindById;
-exports.Find = Find = _ramda2['default'].curry(function (cb, json, shape) {
+exports.findById = _temporalAssertDefined(findById, 'findById', _temporalUndefined) && findById;
+exports.find = find = _ramda2['default'].curry(function (cb, json, shape) {
   var replaced = _temporalUndefined;
 
   replaced = function replaced(x) {
@@ -122,4 +122,4 @@ exports.Find = Find = _ramda2['default'].curry(function (cb, json, shape) {
 
   return _ramda2['default'].compose(_temporalAssertDefined(removeNull, 'removeNull', _temporalUndefined) && removeNull, _temporalAssertDefined(iterator, 'iterator', _temporalUndefined) && iterator)(_temporalAssertDefined(replaced, 'replaced', _temporalUndefined) && replaced, json);
 });
-exports.Find = _temporalAssertDefined(Find, 'Find', _temporalUndefined) && Find;
+exports.find = _temporalAssertDefined(find, 'find', _temporalUndefined) && find;

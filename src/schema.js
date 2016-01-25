@@ -45,13 +45,13 @@ export const disassemble = (json) => {
 }
 
 // FindById --------------------------------------------------------------------
-export const FindById = _.curry((cb, json, id) => {
+export const findById = _.curry((cb, json, id) => {
   const replaced = (x) => x._id === id ? cb(x) : x;
   return _.compose(removeNull, iterator)(replaced, json)
 })
 
 // Find ------------------------------------------------------------------------
-export const Find = _.curry((cb, json, shape) => {
+export const find = _.curry((cb, json, shape) => {
   const replaced = (x) => _.equals(x, shape) ? cb(x) : x;
   return _.compose(removeNull, iterator)(replaced, json);
 })
