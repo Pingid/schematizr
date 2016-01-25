@@ -1,0 +1,23 @@
+{
+  "name": "schematize",
+  "version": "1.0.0",
+  "description": "A functional library which converts deeply nested JSON to a schema which is easily editable.",
+  "main": "dest/schema.js",
+  "dependencies": {
+    "ramda": "0.19.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pingid/schematize.git"
+  },
+  "author": "Dan Beaven <dm.beaven@gmail.com> (http://danbeaven.co.uk)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pingid/schematize/issues"
+  },
+  "homepage": "https://github.com/Pingid/schematize#readme"
+}
