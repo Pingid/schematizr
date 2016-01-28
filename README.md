@@ -1,5 +1,5 @@
 # schematizr
-Schematisr is a functional library which converts deeply nested JSON to a schema which is easily editable.
+Schematisr is a lightweight library designed to help you modify deeply nested json. The api is purposely small, each function is curried making it easy to extend the library with functions more spesific to your project.
 
 ## Installation
 
@@ -7,14 +7,10 @@ Schematisr is a functional library which converts deeply nested JSON to a schema
 npm install --save schematizr
 ```
 
-Schematisr takes deeply nested JSON and adds an id to each object. It also comes with functions such as find and findById which can be used to add, delete or modify sections of the JSON. The `findById` and `find` are both curried meaning you can partial apply the functions.
-
-## Assembling and disassembling the JSON
-
 ## Usage
 
 ```javascript
-import { assemble, disassemble, findById, find } from 'schematizr';
+import { assemble, disassemble, findById, find, filter } from 'schematizr';
 ```
 
 Example data:
@@ -92,7 +88,7 @@ const out = disassemble(increasedRun)
 // { todoList: [
 //     { text: 'Exercise',
 //       subList: [
-//         { text: '5krun run' },
+//         { text: '100krun run' },
 //         { test: '30min stretch' }
 //       ]
 //     },
@@ -114,6 +110,25 @@ const increasedStretch = Find(function(object) {
 //     { text: 'Exercise',
 //       subList: [
 //         { text: '5k run' },
+//         { test: '60min stretch' }
+//       ]
+//     },
+//     { text: 'Trim nose hairs' }
+//   ]
+// }
+```
+
+Filter takes a callback which gets all the values from the nested json and returns a boolean
+
+### `filter(callback, nestedObject)`
+
+```javascript
+const removeRun = filter(function(value) {
+  return value !== '5k run'
+})
+// { todoList: [
+//     { text: 'Exercise',
+//       subList: [
 //         { test: '30min stretch' }
 //       ]
 //     },
@@ -126,7 +141,7 @@ Curried Example:
 
 ```javascript
 const removeById = findById(function(object) {
-  return
+  return null
 }, schema)
 
 const removedNoseTrimming = removeById(4)

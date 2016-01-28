@@ -17,10 +17,13 @@ const objectType = _.curry((objFunc, arrFunc, json) => {
 // Recursive function which takes a function and nested json and iterates over
 // the json running every value through the function
 const iterator = _.curry((func, json) => {
-  const recurse = _.compose(iterator(func), func);
-  const iter = objectType(_.mapObjIndexed(recurse), _.map(recurse));
-  return iter(json)
+  const recursive = _.curry((cb, value) => {
+    const recurse = _.compose(recursive(cb), cb);
+    return objectType(_.mapObjIndexed(recurse), _.map(recurse))(value)
+  })
+  return recursive(func, { json }).json
 })
+
 
 // Takes a filter function which must return a boolean and some nested json
 // it iterates over the json running each value through the filter
@@ -32,13 +35,12 @@ const filterer = (filter, json) => {
 // Remove any nulls undifines or false booleans
 const removeNull = (json) => {
   const filter = _.filter(x => x ? true : false);
-  return filterer(filter, json)
+  return filterer(_.filter(x => x ? true : false), json)
 }
 
 // Remove any empty objects or arrays
 const removeEmpty = (json) => {
-  const filter = _.filter(x => !_.isEmpty(x))
-  return filterer(filter, json)
+  return filterer(_.filter(x => !_.isEmpty(x)), json)
 }
 
 // Assemble --------------------------------------------------------------------
@@ -50,7 +52,7 @@ export const assemble = (json) => {
 // disassemble -----------------------------------------------------------------
 export const disassemble = (json) => {
   const removeId = objectType((obj) => _.dissoc('_id', obj), x => x)
-  return _.compose(removeEmpty, removeNull, iterator)(removeId, removeOuter)
+  return _.compose(removeEmpty, removeNull, iterator)(removeId, json)
 }
 
 // FindById --------------------------------------------------------------------
@@ -64,3 +66,8 @@ export const find = _.curry((cb, json, shape) => {
   const replaced = (x) => _.equals(x, shape) ? cb(x) : x;
   return _.compose(removeNull, iterator)(replaced, json);
 })
+
+// Filter ----------------------------------------------------------------------
+export const filter = (cb, json) => {
+  return removeEmpty(filterer(_.filter(cb), json))
+}
