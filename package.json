@@ -1,17 +1,24 @@
 {
   "name": "schematizr",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A functional library which converts deeply nested JSON to a schema which is easily editable.",
-  "main": "dest/schema.js",
+  "main": "lib/schema.js",
   "dependencies": {
     "ramda": "0.19.1"
   },
   "devDependencies": {
+    "babel-cli": "6.4.5",
+    "babel-preset-es2015": "6.3.13",
+    "babel-preset-stage-0": "6.3.13",
     "chai": "3.4.1",
     "mocha": "2.3.4"
   },
   "scripts": {
-    "test": "mocha test/index.js -w"
+    "prebuild": "rm -rf lib && mkdir lib",
+    "build": "babel --presets es2015,stage-0 -d lib/ src/",
+    "build-watch": "babel --watch --presets es2015,stage-0 -d lib/ src/",
+    "test": "mocha test/index.js",
+    "testing": "mocha test/index.js -w"
   },
   "repository": {
     "type": "git",
