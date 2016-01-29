@@ -1,5 +1,5 @@
 # schematizr
-Schematisr is a lightweight library designed to help you modify deeply nested json. The api is purposely small, each function is curried making it easy to extend the library with functions more spesific to your project.
+Schematizr is a lightweight library built to modify deeply nested JSON. It has been designed for easy function composition via currying and so has an intentionally small API. This means that instead of a large number of out of the box "use once" methods, schematizr only has enough to enable you to quickly build the functionality you need for your project and can stay small as a result.
 
 ## Installation
 
@@ -52,7 +52,7 @@ const schema = assemble(data);
 // }
 ```
 
-Then we can access the different objects by using their unique id:
+Access the different objects by using their unique id:
 
 ### `findById(callback, schema, id)`
 
@@ -78,7 +78,7 @@ const increasedRun = findById(function(object) {
 //   ]
 // }
 ```
-Disassemble removes id's and outputs schema to original structure:
+Disassemble removes all id's and returns the schema to its original structure:
 
 ### `disassemble(schema)`
 
@@ -97,7 +97,7 @@ const out = disassemble(increasedRun)
 // }
 ```
 
-We also have find, which works on any nested JSON and return for any value or object:
+Find accepts a JSON literal and returns a matching value or object:
 
 ### `find(callback, nestedObject, findShape)`
 
@@ -118,7 +118,7 @@ const increasedStretch = Find(function(object) {
 // }
 ```
 
-Filter takes a callback which gets all the values from the nested json and returns a boolean
+Filter takes a callback which receives all the values from the JSON literal and returns a boolean
 
 ### `filter(callback, nestedObject)`
 
