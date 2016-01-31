@@ -14,7 +14,6 @@ const schematizr = require('../lib/schema'),
 describe('schematizr', () => {
   describe('assemble', () =>  {
     assembleTests.equalities.forEach((test) => {
-      console.log(test.inputData, assemble(test.inputData));
       it(test.name, () => {
         expect(assemble(test.inputData)).deep.equal(test.outputData)
       })

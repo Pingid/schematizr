@@ -100,7 +100,10 @@ export const disassemble = (json) => {
 */
 // findById :: (j -> j) -> s -> Int -> s
 export const findById = _.curry((cb, json, id) => {
-  const replaced = (x) => x._id === id ? cb(x) : x;
+  const replaced = (object) => {
+    if (object && object._id && object._id === id) return cb(object) 
+    else return object;
+  }
   if(_.isArrayLike(json) && json[0] && json[0]._id) {
     return _.compose(assemble, removeNull, iterator)(replaced, json)}
   return _.compose(assemble, removeNull, iterator)(replaced, json)
