@@ -90,8 +90,8 @@ export const assemble = (json, key="_id") => {
   Removes all _id keys from JSON literal
 */
 // disassemble :: s -> j
-export const disassemble = (json) => {
-  const removeId = objectType((obj) => _.dissoc('_id', obj), x => x)
+export const disassemble = (json, key='_id') => {
+  const removeId = objectType((obj) => _.dissoc(key, obj), x => x)
   return _.compose(removeEmpty, removeNull, iterator)(removeId, json)
 }
 
