@@ -87,7 +87,7 @@ export const assemble = (json, key="_id") => {
 }
 
 /*
-  Removes all _id keys from JSON literal
+  Removes all id keys from JSON literal
 */
 // disassemble :: s -> j
 export const disassemble = (json, key='_id') => {
@@ -99,12 +99,12 @@ export const disassemble = (json, key='_id') => {
   Returns JSON literal with callback wrapped around object containing chosen id
 */
 // findById :: (j -> j) -> s -> Int -> s
-export const findById = _.curry((cb, json, id) => {
+export const findById = _.curry((cb, json, id, key='_id') => {
   const replaced = (object) => {
-    if (object && object._id && object._id === id) return cb(object)
+    if (object && object[key] && object[key] === id) return cb(object)
     else return object;
   }
-  if(_.isArrayLike(json) && json[0] && json[0]._id) {
+  if(_.isArrayLike(json) && json[0] && json[0][key]) {
     return _.compose(assemble, removeNull, iterator)(replaced, json)}
   return _.compose(assemble, removeNull, iterator)(replaced, json)
 })
@@ -114,9 +114,9 @@ export const findById = _.curry((cb, json, id) => {
   matches the object or value searched for
 */
 // find :: (j -> j) -> j -> j -> j
-export const find = _.curry((cb, json, shape) => {
+export const find = _.curry((cb, json, shape, key='_id') => {
 const replaced = (x) => _.equals(x, shape) ? cb(x) : x;
-  if(_.isArrayLike(json) && json[0] && json[0]._id) {
+  if(_.isArrayLike(json) && json[0] && json[0][key]) {
     return _.compose(removeNull, iterator)(replaced, json)}
   return _.compose(removeNull, iterator)(replaced, json);
 })
