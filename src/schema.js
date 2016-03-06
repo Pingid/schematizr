@@ -78,10 +78,10 @@ const removeEmpty = (json) => {
   Adds a unique id to every plain object
 */
 // assemble :: j -> j
-export const assemble = (json) => {
+export const assemble = (json, key="_id") => {
   const addId = objectType((obj) => {
-    if(obj && obj._id || _.isEmpty(obj)) return obj;
-    else return _.assoc('_id', uniqueId(), obj)
+    if(obj && obj[key] || _.isEmpty(obj)) return obj;
+    else return _.assoc(key, uniqueId(), obj)
   }, x => x)
   return _.compose(removeNull, iterator)(addId, json)
 }
@@ -101,7 +101,7 @@ export const disassemble = (json) => {
 // findById :: (j -> j) -> s -> Int -> s
 export const findById = _.curry((cb, json, id) => {
   const replaced = (object) => {
-    if (object && object._id && object._id === id) return cb(object) 
+    if (object && object._id && object._id === id) return cb(object)
     else return object;
   }
   if(_.isArrayLike(json) && json[0] && json[0]._id) {

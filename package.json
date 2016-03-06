@@ -1,6 +1,9 @@
 {
   "name": "schematizr",
-  "version": "3.0.1",
+  "version": "3.0.2",
+  "babel": {
+    "presets": ["es2015", "stage-0"]
+  },
   "description": "A functional library which converts deeply nested JSON to a schema which is easily editable.",
   "main": "lib/schema.js",
   "dependencies": {
