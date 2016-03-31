@@ -9,7 +9,7 @@ const testData = [
 
 describe('findObjWith', () => {
   it('Replace object in nest', () => {
-    const actual = findObjWith((x) => 'cool', testData, { four: '4' })
+    const actual = findObjWith((x) => 'cool', { four: '4' }, testData)
     const expected = [
       { one: '1', two: '2', three: ['cool'] },
       { one: 1, two: 2, three: [{ four: 4, five: [{ six: 6 }] }] }

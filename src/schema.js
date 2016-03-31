@@ -121,7 +121,7 @@ export const disassemble = (json, key='__id') => {
   matches the object or value searched for
 */
 // find :: (j -> j) -> j -> j -> j
-export const find = R.curry((f, json, shape) => {
+export const find = R.curry((f, shape, json) => {
   typeError('find', { expected: 'Function', actual: f });
   return R.compose(removeNull, map)((x) => R.equals(x, shape) ? f(x) : x, json);
 });
@@ -131,7 +131,7 @@ export const find = R.curry((f, json, shape) => {
   contains the same key value pairs that were searched for searched for
 */
 // findIn :: (j -> j) -> j -> j
-export const findObjWith = curry((f, json, shape) => {
+export const findObjWith = curry((f, shape, json) => {
   typeError('findObjWith', { expected: 'Function', actual: f }, { expected: 'Object', actual: shape });
   return R.compose(removeNull, map)((x) => objContains(shape, x) ? f(x) : x, json)
 });

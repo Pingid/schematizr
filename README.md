@@ -123,12 +123,12 @@ const increasedRun = findById((object) => {
 
 Find accepts a value and returns a matching value or object:
 
-### `find(callback, nestedObject, findShape)`
+### `find(callback, value, nestedObject)`
 
 ```javascript
 const increasedStretch = Find(function(object) {
   return { text: '60min stretch' };
-}, data, { text: '30min stretch' });
+}, { text: '30min stretch' }, data);
 
 // { todoList: [
 //     { text: 'Exercise',
