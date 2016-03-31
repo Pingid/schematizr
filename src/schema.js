@@ -1,4 +1,4 @@
-import _ from 'ramda';
+import R, { curry } from 'ramda';
 
 /*
  Type notations
@@ -23,24 +23,23 @@ const uniqueId = () => { return idCounter++ }
   returns the item wrapped in either an array callback, object callback or just the item
 */
 // objectType :: ({a} -> {a}) -> ([a] -> [a]) -> j -> j
-const objectType = _.curry((objFunc, arrFunc, json) => {
-  if (_.type(json) === 'Object') return objFunc(json);
-  else if (_.type(json) === 'Array') return arrFunc(json);
+export const objectType = R.curry((objFunc, arrFunc, json) => {
+  if (R.type(json) === 'Object') return objFunc(json);
+  else if (R.type(json) === 'Array') return arrFunc(json);
   return json;
 })
 
+
 /*
-  Recursive function which takes a function and nested json and iterates over
-  the json running every value through the function
+  Check whether the key values pairs from the first object are in the second
 */
-// iterator :: (j -> j) -> j -> j
-const iterator = _.curry((func, json) => {
-  const recursive = _.curry((cb, value) => {
-    const recurse = _.compose(recursive(cb), cb);
-    return objectType(_.mapObjIndexed(recurse), _.map(recurse))(value)
-  })
-  return recursive(func, { json }).json
-})
+// objContains :: Object -> Object -> Bool
+export const objContains = curry((shape, obj) => {
+  if (R.type(obj) === 'Object') {
+    return R.keys(shape).filter((key) => obj[key] === shape[key]).length === R.keys(shape).length;
+  }
+  return false;
+});
 
 /*
   Takes a filter function which must return a boolean and some nested json
@@ -48,8 +47,8 @@ const iterator = _.curry((func, json) => {
   filterer :: (a -> Bool) ->
 */
 // filterer :: (j -> Bool) -> j -> j
-const filterer = (filter, json) => {
-  const filtered = iterator(x => objectType(filter, filter, x))
+export const filterer = (filter, json) => {
+  const filtered = map(x => objectType(filter, filter, x))
   return filtered(json)
 }
 
@@ -57,74 +56,92 @@ const filterer = (filter, json) => {
   Remove any nulls undifines or false booleans
 */
 // removeNull :: j -> j
-const removeNull = (json) => {
-  const filter = _.filter(x => x ? true : false);
-  return filterer(_.filter(x => x ? true : false), json)
+export const removeNull = (json) => {
+  return filterer(R.filter(x => x ? true : false), json)
 }
 
 /*
   Remove any empty objects or arrays
 */
 // removeEmpty :: j -> j
-const removeEmpty = (json) => {
-  return filterer(_.filter(x => !_.isEmpty(x)), json)
+export const removeEmpty = (json) => {
+  return filterer(R.filter(x => !R.isEmpty(x)), json)
 }
 
+const typeError = (functionName, ...args) => {
+  const actual = args.map(x => R.type(x.actual));
+  const expected = args.map(x => x.expected);
+  if(!R.equals(actual, expected)) {
+    throw new Error(`${functionName} expected (${expected.join(', ')}) instead received (${actual.join(', ')})`);
+    return false;
+  }
+  return true;
+}
 ////////////////////////////////////////////////////////////////////////////////
 // API
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
+  Recursive function which takes a function and nested json and iterates over
+  the json mapping over every value
+*/
+// map :: (j -> j) -> j -> j
+export const map = R.curry((func, json) => {
+  typeError('map', { expected: 'Function', actual: func });
+  const recursive = R.curry((f, value) => {
+    const recurse = R.compose(recursive(f), f);
+    return objectType(R.mapObjIndexed(recurse), R.map(recurse))(value)
+  })
+  return recursive(func, { json }).json
+})
+
+/*
   Adds a unique id to every plain object
 */
 // assemble :: j -> j
-export const assemble = (json, key="_id") => {
+export const assemble = (json, key="__id") => {
   const addId = objectType((obj) => {
-    if(obj && obj[key] || _.isEmpty(obj)) return obj;
-    else return _.assoc(key, uniqueId(), obj)
+    if(obj && obj[key] || R.isEmpty(obj)) return obj;
+    else return R.assoc(key, uniqueId(), obj)
   }, x => x)
-  return _.compose(removeNull, iterator)(addId, json)
+  return R.compose(removeNull, map)(addId, json)
 }
 
 /*
   Removes all id keys from JSON literal
 */
 // disassemble :: s -> j
-export const disassemble = (json, key='_id') => {
-  const removeId = objectType((obj) => _.dissoc(key, obj), x => x)
-  return _.compose(removeEmpty, removeNull, iterator)(removeId, json)
+export const disassemble = (json, key='__id') => {
+  const removeId = objectType((obj) => R.dissoc(key, obj), x => x)
+  return R.compose(removeEmpty, removeNull, map)(removeId, json)
 }
-
-/*
-  Returns JSON literal with callback wrapped around object containing chosen id
-*/
-// findById :: (j -> j) -> s -> Int -> s
-export const findById = _.curry((cb, json, id, key='_id') => {
-  const replaced = (object) => {
-    if (object && object[key] && object[key] === id) return cb(object)
-    else return object;
-  }
-  if(_.isArrayLike(json) && json[0] && json[0][key]) {
-    return _.compose(assemble, removeNull, iterator)(replaced, json)}
-  return _.compose(assemble, removeNull, iterator)(replaced, json)
-})
 
 /*
   Returns JSON literal with callback wrapped around the object or value that
   matches the object or value searched for
 */
 // find :: (j -> j) -> j -> j -> j
-export const find = _.curry((cb, json, shape, key='_id') => {
-const replaced = (x) => _.equals(x, shape) ? cb(x) : x;
-  if(_.isArrayLike(json) && json[0] && json[0][key]) {
-    return _.compose(removeNull, iterator)(replaced, json)}
-  return _.compose(removeNull, iterator)(replaced, json);
-})
+export const find = R.curry((f, json, shape) => {
+  typeError('find', { expected: 'Function', actual: f });
+  return R.compose(removeNull, map)((x) => R.equals(x, shape) ? f(x) : x, json);
+});
+
+/*
+  Returns JSON literal with callback wrapped around the object that
+  contains the same key value pairs that were searched for searched for
+*/
+// findIn :: (j -> j) -> j -> j
+export const findObjWith = curry((f, json, shape) => {
+  typeError('findObjWith', { expected: 'Function', actual: f }, { expected: 'Object', actual: shape });
+  return R.compose(removeNull, map)((x) => objContains(shape, x) ? f(x) : x, json)
+});
 
 /*
   Returns JSON literal with every value or object wrapped in the filter
 */
 // filter :: (j -> Bool) -> j -> j
-export const filter = (cb, json) => {
-  return removeEmpty(filterer(_.filter(cb), json))
+export const filter = (f, json) => {
+  typeError('filter', { expected: 'Function', actual: f });
+  return removeEmpty(filterer(R.filter(f), json))
+  // return R.compose(removeNull, removeEmpty, R.filter(f), json)
 }

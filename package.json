@@ -1,6 +1,6 @@
 {
   "name": "schematizr",
-  "version": "3.0.4",
+  "version": "4.0.0",
   "babel": {
     "presets": ["es2015", "stage-0"]
   },
@@ -20,8 +20,8 @@
     "prebuild": "rm -rf lib && mkdir lib",
     "build": "babel -d lib/ src/",
     "build-watch": "babel --watch -d lib/ src/",
-    "test": "mocha --require babel-core/register test/index.js",
-    "testing": "mocha --require babel-core/register test/index.js -w"
+    "test": "mocha --require babel-core/register test/**/*.test.js",
+    "testing": "mocha --require babel-core/register test/**/*.test.js -w"
   },
   "repository": {
     "type": "git",

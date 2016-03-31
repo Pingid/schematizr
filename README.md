@@ -10,7 +10,7 @@ npm install --save schematizr
 ## Usage
 
 ```javascript
-import { assemble, disassemble, findById, find, filter } from 'schematizr';
+import { assemble, disassemble, map, findObjWith, find, filter } from 'schematizr';
 ```
 
 Example data:
@@ -21,7 +21,7 @@ const data = {
     {  text: 'Exercise',
       subList: [
         { text: '5k run' },
-        { test: '30min stretch' }
+        { text: '30min stretch' }
       ]
     },
     { text: 'Trim nose hairs' }
@@ -29,88 +29,112 @@ const data = {
 }
 ```
 
-Convert the JSON into a the schema:
+Adds a unique value to every object:
 
-### `assemble(nestedJson)`
+### `assemble(nestedJson, key = '___id')`
 
 ```javascript
-const schema = assemble(data);
+const schemarised = assemble(data);
 
 // { todoList: [
-//     { _id: 1,
+//     { __id: 1,
 //       text: 'Exercise',
 //       subList: [
-//         { _id: 2,
+//         { __id: 2,
 //           text: '5k run' },
-//         { _id: 3,
-//           test: '30min stretch' }
+//         { __id: 3,
+//           text: '30min stretch' }
 //       ]
 //     },
-//     { _id: 4,
+//     { __id: 4,
 //       text: 'Trim nose hairs' }
 //   ]
 // }
 ```
+Disassemble removes chosen key from all objects:
 
-Access the different objects by using their unique id:
-
-### `findById(callback, schema, id)`
-
-```javascript
-const increasedRun = findById(function(object) {
-  return Object.assign({}, object, {
-    text: '100k run'
-  })
-}, schema, 2)
-
-// { todoList: [
-//     { _id: 1,
-//       text: 'Exercise',
-//       subList: [
-//         { _id: 2,
-//           text: '100k run' },
-//         { _id: 3,
-//           test: '30min stretch' }
-//       ]
-//     },
-//     { _id: 4,
-//       text: 'Trim nose hairs' }
-//   ]
-// }
-```
-Disassemble removes all id's and returns the schema to its original structure:
-
-### `disassemble(schema)`
+### `disassemble(nestedJson, key = '__id')`
 
 ```javascript
-const out = disassemble(increasedRun)
+const deSchemarised = disassemble(schemarised);
 
-// { todoList: [
-//     { text: 'Exercise',
+// {
+//   todoList: [
+//     {  text: 'Exercise',
 //       subList: [
-//         { text: '100krun run' },
-//         { test: '30min stretch' }
+//         { text: '5k run' },
+//         { text: '30min stretch' }
 //       ]
 //     },
 //     { text: 'Trim nose hairs' }
 //   ]
 // }
 ```
+Maps over every value in the nested JSON
 
-Find accepts a JSON literal and returns a matching value or object:
+### `map(callback, nestedJson)`
+
+```javascript
+const capitalised = map((value) => {
+  return typeof value === 'string' ? value.toUpperCase() : value
+}, data);
+
+
+// {
+//   todoList: [
+//     {
+//       text: "EXERCISE",
+//       subList: [
+//         { text: "5K RUN" },
+//         { text: "30MIN STRETCH" }
+//       ]
+//     },
+//     { text: "TRIM NOSE HAIRS" }
+//   ]
+// }
+```
+
+Access objects by searching for key value pairs that the object contains:
+
+### `findObjWith(callback, object, nestedJson)`
+
+```javascript
+const increasedRun = findById((object) => {
+  return Object.assign({}, object, {
+    text: '100k run'
+  });
+}, { __id: 2 }, schemarised);
+
+// { todoList: [
+//     { __id: 1,
+//       text: 'Exercise',
+//       subList: [
+//         { __id: 2,
+//           text: '100k run' },
+//         { __id: 3,
+//           text: '30min stretch' }
+//       ]
+//     },
+//     { __id: 4,
+//       text: 'Trim nose hairs' }
+//   ]
+// }
+```
+
+Find accepts a value and returns a matching value or object:
 
 ### `find(callback, nestedObject, findShape)`
 
 ```javascript
 const increasedStretch = Find(function(object) {
-  return { test: '60min stretch' }
-}, data, { test: '30min stretch' })
+  return { text: '60min stretch' };
+}, data, { text: '30min stretch' });
 
 // { todoList: [
 //     { text: 'Exercise',
 //       subList: [
 //         { text: '5k run' },
-//         { test: '60min stretch' }
+//         { text: '60min stretch' }
 //       ]
 //     },
 //     { text: 'Trim nose hairs' }
@@ -124,12 +148,12 @@ Filter takes a callback which receives all the values from the JSON literal and 
 
 ```javascript
 const removeRun = filter(function(value) {
-  return value !== '5k run'
-})
+  return value !== '5k run';
+});
 // { todoList: [
 //     { text: 'Exercise',
 //       subList: [
-//         { test: '30min stretch' }
+//         { text: '30min stretch' }
 //       ]
 //     },
 //     { text: 'Trim nose hairs' }
@@ -140,16 +164,19 @@ const removeRun = filter(function(value) {
 Curried Example:
 
 ```javascript
-const removeById = findById(function(object) {
+const removeObjectWith = findObjWith(function(object) {
   return null
-}, schema)
+}, schemarised)
 
-const removedNoseTrimming = removeById(4)
+const removedNoseTrimming = removeObjectWith({ __id : 4 });
 // { todoList: [
-//     { text: 'Exercise',
+//     { __id: 1,
+//       text: 'Exercise',
 //       subList: [
-//         { text: '5k run' },
-//         { test: '30min stretch' }
+//         { __id: 2,
+//           text: '100k run' },
+//         { __id: 3,
+//           text: '30min stretch' }
 //       ]
 //     }
 //   ]
