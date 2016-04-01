@@ -9,9 +9,9 @@ const testData = [
 
 describe('find', () => {
   it('Replace value in nest', () => {
-    const actual = find((x) => 'cool', 'two', testData)
+    const actual = find((x) => '', 'two', testData)
     const expected = [
-      { _id: '1', endpoints: [{ name: 'cool' }, { name: 'cool' }] },
+      { _id: '1', endpoints: [{ name: 'cool' }, { name: '' }] },
       { _id: '2', endpoints: [{ name: 'cool' }] }
     ];
     expect(actual).deep.equal(expected);

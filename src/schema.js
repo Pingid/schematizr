@@ -57,7 +57,7 @@ export const filterer = (filter, json) => {
 */
 // removeNull :: j -> j
 export const removeNull = (json) => {
-  return filterer(R.filter(x => x ? true : false), json)
+  return filterer(R.filter(x => x !== null || x !== 'undefined'), json)
 }
 
 /*
