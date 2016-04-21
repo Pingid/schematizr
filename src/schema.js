@@ -23,7 +23,7 @@ const uniqueId = () => { return idCounter++ }
   returns the item wrapped in either an array callback, object callback or just the item
 */
 // objectType :: ({a} -> {a}) -> ([a] -> [a]) -> j -> j
-const objectType = R.curry((objFunc, arrFunc, json) => {
+export const objectType = R.curry((objFunc, arrFunc, json) => {
   if (R.type(json) === 'Object') return objFunc(json);
   else if (R.type(json) === 'Array') return arrFunc(json);
   return json;
@@ -34,7 +34,7 @@ const objectType = R.curry((objFunc, arrFunc, json) => {
   Check whether the key values pairs from the first object are in the second
 */
 // objContains :: Object -> Object -> Bool
-const objContains = curry((shape, obj) => {
+export const objContains = curry((shape, obj) => {
   if (R.type(obj) === 'Object') {
     return R.keys(shape).filter((key) => obj[key] === shape[key]).length === R.keys(shape).length;
   }
@@ -47,7 +47,7 @@ const objContains = curry((shape, obj) => {
   filterer :: (a -> Bool) ->
 */
 // filterer :: (j -> Bool) -> j -> j
-const filterer = (filter, json) => {
+export const filterer = (filter, json) => {
   const filtered = map(x => objectType(filter, filter, x))
   return filtered(json)
 }
@@ -56,7 +56,7 @@ const filterer = (filter, json) => {
   Remove any nulls undifines or false booleans
 */
 // removeNull :: j -> j
-const removeNull = (json) => {
+export const removeNull = (json) => {
   return filterer(R.filter(x => x !== null || x !== 'undefined'), json)
 }
 
@@ -64,7 +64,7 @@ const removeNull = (json) => {
   Remove any empty objects or arrays
 */
 // removeEmpty :: j -> j
-const removeEmpty = (json) => {
+export const removeEmpty = (json) => {
   return filterer(R.filter(x => !R.isEmpty(x)), json)
 }
 
@@ -86,7 +86,7 @@ const typeError = (functionName, ...args) => {
   the json mapping over every value
 */
 // map :: (j -> j) -> j -> j
-const map = R.curry((func, json) => {
+export const map = R.curry((func, json) => {
   typeError('map', { expected: 'Function', actual: func });
   const recursive = R.curry((f, value) => {
     const recurse = R.compose(recursive(f), f);
@@ -99,7 +99,7 @@ const map = R.curry((func, json) => {
   Adds a unique id to every plain object
 */
 // assemble :: j -> j
-const assemble = (json, key="__id") => {
+export const assemble = (json, key="$id") => {
   const addId = objectType((obj) => {
     if(obj && obj[key] || R.isEmpty(obj)) return obj;
     else return R.assoc(key, uniqueId(), obj)
@@ -111,7 +111,7 @@ const assemble = (json, key="__id") => {
   Removes all id keys from JSON literal
 */
 // disassemble :: s -> j
-const disassemble = (json, key='__id') => {
+export const disassemble = (json, key='__id') => {
   const removeId = objectType((obj) => R.dissoc(key, obj), x => x)
   return R.compose(removeEmpty, removeNull, map)(removeId, json)
 }
@@ -121,7 +121,7 @@ const disassemble = (json, key='__id') => {
   matches the object or value searched for
 */
 // find :: (j -> j) -> j -> j -> j
-const find = R.curry((f, shape, json) => {
+export const find = R.curry((f, shape, json) => {
   typeError('find', { expected: 'Function', actual: f });
   return R.compose(removeNull, map)((x) => R.equals(x, shape) ? f(x) : x, json);
 });
@@ -131,7 +131,7 @@ const find = R.curry((f, shape, json) => {
   contains the same key value pairs that were searched for searched for
 */
 // findIn :: (j -> j) -> j -> j
-const findObjWith = curry((f, shape, json) => {
+export const findObjWith = curry((f, shape, json) => {
   typeError('findObjWith', { expected: 'Function', actual: f }, { expected: 'Object', actual: shape });
   return R.compose(removeNull, map)((x) => objContains(shape, x) ? f(x) : x, json)
 });
@@ -140,7 +140,7 @@ const findObjWith = curry((f, shape, json) => {
   Returns JSON literal with every value or object wrapped in the filter
 */
 // filter :: (j -> Bool) -> j -> j
-const filter = (f, json) => {
+export const filter = (f, json) => {
   typeError('filter', { expected: 'Function', actual: f });
   return removeEmpty(filterer(R.filter(f), json))
   // return R.compose(removeNull, removeEmpty, R.filter(f), json)

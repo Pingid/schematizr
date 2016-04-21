@@ -1,6 +1,6 @@
 {
   "name": "schematizr",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "babel": {
     "presets": [
       "es2015",
