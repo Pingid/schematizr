@@ -99,13 +99,13 @@ export const map = R.curry((func, json) => {
   Adds a unique id to every plain object
 */
 // assemble :: j -> j
-export const assemble = (json, key="$id") => {
+export const assemble = R.curry((json, key="$id") => {
   const addId = objectType((obj) => {
     if(obj && obj[key] || R.isEmpty(obj)) return obj;
     else return R.assoc(key, uniqueId(), obj)
   }, x => x)
   return R.compose(removeNull, map)(addId, json)
-}
+})
 
 /*
   Removes all id keys from JSON literal

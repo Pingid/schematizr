@@ -1,25 +1,8 @@
 {
   "name": "schematizr",
-  "version": "4.0.4",
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0"
-    ]
-  },
+  "version": "4.0.5",
   "description": "A functional library which converts deeply nested JSON to a schema which is easily editable.",
   "main": "lib/schema.js",
-  "dependencies": {
-    "pointfree-fantasy": "0.1.3",
-    "ramda": "0.20.1"
-  },
-  "devDependencies": {
-    "babel-cli": "6.4.5",
-    "babel-preset-es2015": "6.3.13",
-    "babel-preset-stage-0": "6.3.13",
-    "chai": "3.4.1",
-    "mocha": "2.3.4"
-  },
   "scripts": {
     "prebuild": "rm -rf lib && mkdir lib",
     "build": "babel -d lib/ src/",
@@ -36,5 +19,21 @@
   "bugs": {
     "url": "https://github.com/Pingid/schematizr/issues"
   },
-  "homepage": "https://github.com/Pingid/schematizr#readme"
+  "homepage": "https://github.com/Pingid/schematizr#readme",
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
+  },
+  "dependencies": {
+    "ramda": "0.20.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.4.5",
+    "babel-preset-es2015": "6.3.13",
+    "babel-preset-stage-0": "6.3.13",
+    "chai": "3.4.1",
+    "mocha": "2.3.4"
+  }
 }

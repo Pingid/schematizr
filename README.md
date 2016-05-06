@@ -19,7 +19,7 @@ Example data:
 const data = {
   todoList: [
     {  text: 'Exercise',
-      subList: [
+      sublist: [
         { text: '5k run' },
         { text: '30min stretch' }
       ]
@@ -31,29 +31,28 @@ const data = {
 
 Adds a unique value to every object:
 
-### `assemble(nestedJson, key = '___id')`
+### `assemble(nestedJson, key = '_$id')`
 
 ```javascript
 const schemarised = assemble(data);
 
-// { todoList: [
-//     { __id: 1,
-//       text: 'Exercise',
-//       subList: [
-//         { __id: 2,
-//           text: '5k run' },
-//         { __id: 3,
-//           text: '30min stretch' }
-//       ]
-//     },
-//     { __id: 4,
-//       text: 'Trim nose hairs' }
-//   ]
+// {
+//   todoList: [
+//    { text: 'Exercise',
+//      sublist: [
+//        { text: '5k run', $id: 3 },
+//        { text: '30min stretch', $id: 4 }
+//      ],
+//      $id: 2
+//    },
+//    { text: 'Trim nose hairs', $id: 5 }
+//   ],
+//   $id: 1
 // }
 ```
 Disassemble removes chosen key from all objects:
 
-### `disassemble(nestedJson, key = '__id')`
+### `disassemble(nestedJson, key = '$id')`
 
 ```javascript
 const deSchemarised = disassemble(schemarised);
@@ -61,7 +60,7 @@ const deSchemarised = disassemble(schemarised);
 // {
 //   todoList: [
 //     {  text: 'Exercise',
-//       subList: [
+//       sublist: [
 //         { text: '5k run' },
 //         { text: '30min stretch' }
 //       ]
@@ -84,7 +83,7 @@ const capitalised = map((value) => {
 //   todoList: [
 //     {
 //       text: "EXERCISE",
-//       subList: [
+//       sublist: [
 //         { text: "5K RUN" },
 //         { text: "30MIN STRETCH" }
 //       ]
@@ -99,23 +98,23 @@ Access objects by searching for key value pairs that the object contains:
 ### `findObjWith(callback, object, nestedJson)`
 
 ```javascript
-const increasedRun = findById((object) => {
+const increasedRun = findObjWith((object) => {
   return Object.assign({}, object, {
     text: '100k run'
   });
-}, { __id: 2 }, schemarised);
+}, { $id: 2 }, schemarised);
 
 // { todoList: [
-//     { __id: 1,
+//     { $id: 1,
 //       text: 'Exercise',
-//       subList: [
-//         { __id: 2,
+//       sublist: [
+//         { $id: 2,
 //           text: '100k run' },
-//         { __id: 3,
+//         { $id: 3,
 //           text: '30min stretch' }
 //       ]
 //     },
-//     { __id: 4,
+//     { $id: 4,
 //       text: 'Trim nose hairs' }
 //   ]
 // }
@@ -126,13 +125,13 @@ Find accepts a value and returns a matching value or object:
 ### `find(callback, value, nestedObject)`
 
 ```javascript
-const increasedStretch = Find(function(object) {
-  return { text: '60min stretch' };
-}, { text: '30min stretch' }, data);
+const increasedStretch = find(function(object) {
+  return '60min stretch';
+}, '30min stretch' , data);
 
 // { todoList: [
 //     { text: 'Exercise',
-//       subList: [
+//       sublist: [
 //         { text: '5k run' },
 //         { text: '60min stretch' }
 //       ]
@@ -152,7 +151,7 @@ const removeRun = filter(function(value) {
 });
 // { todoList: [
 //     { text: 'Exercise',
-//       subList: [
+//       sublist: [
 //         { text: '30min stretch' }
 //       ]
 //     },
@@ -164,21 +163,20 @@ const removeRun = filter(function(value) {
 Curried Example:
 
 ```javascript
-const removeObjectWith = findObjWith(function(object) {
-  return null
-}, schemarised)
+const removeSublists = map((value) => {
+  if (value && value.sublist) {
+    delete value['sublist']
+    return value;
+  }
+  return value;
+})
 
-const removedNoseTrimming = removeObjectWith({ __id : 4 });
-// { todoList: [
-//     { __id: 1,
-//       text: 'Exercise',
-//       subList: [
-//         { __id: 2,
-//           text: '100k run' },
-//         { __id: 3,
-//           text: '30min stretch' }
-//       ]
-//     }
+const removed = removeSublists(data)
+
+// {
+//   todoList: [
+//    { text: 'Exercise' },
+//    { text: 'Trim nose hairs' }
 //   ]
 // }
 
