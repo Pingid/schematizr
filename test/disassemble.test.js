@@ -3,17 +3,17 @@ import { expect, should } from 'chai';
 import { disassemble } from '../lib/schema'
 
 const testData = [
-  { endpoints: [{ name: "cool", __id: 2 }, { name: "two", __id: 3 } ], __id: 1 },
-  { endpoints: [{ name: "cool", __id: 5 }], __id: 4 }
+  { endpoints: [{ name: "cool", $id: 2 }, { name: "two", $id: 3 } ], other: [{ text: 'haha', $id: 4 }], $id: 1 },
+  { endpoints: [{ name: "cool", $id: 6 }], $id: 5 }
 ];
 
 describe('disassemble', () => {
-  it('Removes __id key to each object', () => {
+  it('Removes $id key to each object', () => {
     const actual = disassemble(testData)
     const expected = [
-      { endpoints: [{ name: 'cool' }, { name: 'two' }] },
+      { endpoints: [{ name: 'cool' }, { name: 'two' }], other: [{ text: 'haha' }] },
       { endpoints: [{ name: 'cool' }] }
-    ]
+    ];
     expect(actual).deep.equal(expected);
   });
 });

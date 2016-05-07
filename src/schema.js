@@ -68,6 +68,11 @@ export const removeEmpty = (json) => {
   return filterer(R.filter(x => !R.isEmpty(x)), json)
 }
 
+/*
+  Takes a name of a function and an array of objects with their actual
+  input and expected input if the actual and expect doent match it throws an error
+*/
+// removeEmpty :: j -> j
 const typeError = (functionName, ...args) => {
   const actual = args.map(x => R.type(x.actual));
   const expected = args.map(x => x.expected);
@@ -111,7 +116,7 @@ export const assemble = R.curry((json, key="$id") => {
   Removes all id keys from JSON literal
 */
 // disassemble :: s -> j
-export const disassemble = (json, key='__id') => {
+export const disassemble = (json, key='$id') => {
   const removeId = objectType((obj) => R.dissoc(key, obj), x => x)
   return R.compose(removeEmpty, removeNull, map)(removeId, json)
 }

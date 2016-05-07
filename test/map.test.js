@@ -16,20 +16,18 @@ describe('map', () => {
     ];
     expect(actual).deep.equal(expected);
   });
-});
-
-
-describe('map over non deep nests', () => {
-  [
-    { name: 'null', input: null },
-    { name: 'plainObject', input: {} },
-    { name: 'array', input: [] },
-    { name: 'string', input: '' },
-    { name: 'number', input: 0 },
-    { name: 'method', input: x => x }
-  ].forEach((input) => {
-    it(input.name + ' should return original ' + input.name, () => {
-      expect(map((x) => x, input.input)).deep.equal(input.input)
+  describe('mapping over', () => {
+    [
+      { name: 'null', input: null },
+      { name: 'plainObject', input: {} },
+      { name: 'array', input: [] },
+      { name: 'string', input: '' },
+      { name: 'number', input: 0 },
+      { name: 'method', input: x => x }
+    ].forEach((input) => {
+      it(input.name + ' should return original ' + input.name, () => {
+        expect(map((x) => x, input.input)).deep.equal(input.input)
+      })
     })
   })
-})
+});
