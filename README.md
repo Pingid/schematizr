@@ -8,14 +8,14 @@ npm install --save schematizr
 ```
 
 ## API
-Function | Description
------------------------------|--------------------------------------------------
-**assemble(JSON, key='$id')** | Takes an JSON literal and a key which defaults to $id and adds it, along with a value which is an unique number to each object.
-**disassemble(JSON, key='$id')** | Takes an JSON literal and a key which defaults to $id and removes the key from each object.
-**map(Function, JSON)** | Takes a callback which receives all the values in the JSON literal and returns a new value.
-**find(Function, Value, JSON)** | Takes a callback and a value. The callback receives any values which match the given value and returns a new value.
-**findObjWith(Function, Shape, JSON)** | Takes a callback and a shape. The shape is an object with key, value pairs. The callback receives any objects which contain the key, value pairs specified in the shape and returns a new object. 
-**filter(Function, JSON)** | Takes a callback which receives all the values from the JSON literal and returns a boolean.
+Function | Paramters | Description
+-------------|-----------------------|--------------------------------------------------
+**assemble** | (JSON, key='$id') | Takes an JSON literal and a key which defaults to $id and adds it, along with a value which is an unique number to each object.
+**disassemble** | (JSON, key='$id') | Takes an JSON literal and a key which defaults to $id and removes the key from each object.
+**map** | (Function, JSON) | Takes a callback which receives all the values in the JSON literal and returns a new value.
+**find** | (Function, Value, JSON) | Takes a callback and a value. The callback receives any values which match the given value and returns a new value.
+**findObjWith** | (Function, Shape,JSON) | Takes a callback and a shape. The shape is an object with key, value pairs. The callback receives any objects which contain the key, value pairs specified in the shape and returns a new object. 
+**filter** | (Function, JSON) | Takes a callback which receives all the values from the JSON literal and returns a boolean.
 
 ## Usage
 
