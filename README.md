@@ -7,15 +7,21 @@ Schematizr is a lightweight library built to modify deeply nested JSON. It has b
 npm install --save schematizr
 ```
 
+## API
+Function | Paramters | Description
+-------------|-----------------------|--------------------------------------------------
+**assemble** | (JSON, key='$id') | Takes an JSON literal and a key which defaults to $id and adds it, along with a value which is an unique number to each object.
+**disassemble** | (JSON, key='$id') | Takes an JSON literal and a key which defaults to $id and removes the key from each object.
+**map** | (Function, JSON) | Takes a callback which receives all the values in the JSON literal and returns a new value.
+**find** | (Function, Value, JSON) | Takes a callback and a value. The callback receives any values which match the given value and returns a new value.
+**findObjWith** | (Function, Shape,JSON) | Takes a callback and a shape. The shape is an object with key, value pairs. The callback receives any objects which contain the key, value pairs specified in the shape and returns a new object. 
+**filter** | (Function, JSON) | Takes a callback which receives all the values from the JSON literal and returns a boolean.
+
 ## Usage
 
 ```javascript
 import { assemble, disassemble, map, findObjWith, find, filter } from 'schematizr';
-```
 
-Example data:
-
-```javascript
 const data = {
   todoList: [
     {  text: 'Exercise',
@@ -29,10 +35,8 @@ const data = {
 }
 ```
 
-Adds a unique value to every object:
-
 ### `assemble(nestedJson, key = '_$id')`
-
+---
 ```javascript
 const schemarised = assemble(data);
 
@@ -50,10 +54,9 @@ const schemarised = assemble(data);
 //   $id: 1
 // }
 ```
-Disassemble removes chosen key from all objects:
 
 ### `disassemble(nestedJson, key = '$id')`
-
+---
 ```javascript
 const deSchemarised = disassemble(schemarised);
 
@@ -69,10 +72,9 @@ const deSchemarised = disassemble(schemarised);
 //   ]
 // }
 ```
-Maps over every value in the nested JSON
 
 ### `map(callback, nestedJson)`
-
+---
 ```javascript
 const capitalised = map((value) => {
   return typeof value === 'string' ? value.toUpperCase() : value
@@ -93,10 +95,8 @@ const capitalised = map((value) => {
 // }
 ```
 
-Access objects by searching for key value pairs that the object contains:
-
 ### `findObjWith(callback, object, nestedJson)`
-
+---
 ```javascript
 const increasedRun = findObjWith((object) => {
   return Object.assign({}, object, {
@@ -120,12 +120,10 @@ const increasedRun = findObjWith((object) => {
 // }
 ```
 
-Find accepts a value and returns a matching value or object:
-
 ### `find(callback, value, nestedObject)`
-
+---
 ```javascript
-const increasedStretch = find(function(object) {
+const increasedStretch = find(function(value) {
   return '60min stretch';
 }, '30min stretch' , data);
 
@@ -141,10 +139,8 @@ const increasedStretch = find(function(object) {
 // }
 ```
 
-Filter takes a callback which receives all the values from the JSON literal and returns a boolean
-
 ### `filter(callback, nestedObject)`
-
+---
 ```javascript
 const removeRun = filter(function(value) {
   return value !== '5k run';
@@ -160,8 +156,8 @@ const removeRun = filter(function(value) {
 // }
 ```
 
-Curried Example:
-
+#### Curried Example:
+---
 ```javascript
 const removeSublists = map((value) => {
   if (value && value.sublist) {
