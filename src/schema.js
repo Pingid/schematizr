@@ -13,12 +13,6 @@ import R, { curry } from 'ramda';
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
-  Blobal variable for the unique id's and function which returns in incremented
-*/
-let idCounter = 1;
-const uniqueId = () => { return idCounter++ }
-
-/*
   Checks wether the item handed to it is an array plain object or other
   returns the item wrapped in either an array callback, object callback or just the item
 */
@@ -47,25 +41,14 @@ export const objContains = curry((shape, obj) => {
   filterer :: (a -> Bool) ->
 */
 // filterer :: (j -> Bool) -> j -> j
-export const filterer = (filter, json) => {
-  const filtered = map(x => objectType(filter, filter, x))
-  return filtered(json)
-}
+export const filterer = (filter, json) => map(x => objectType(filter, filter, x), json);
 
 /*
-  Remove any nulls undifines or false booleans
-*/
-// removeNull :: j -> j
-export const removeNull = (json) => {
-  return filterer(R.filter(x => x !== null || x !== 'undefined'), json)
-}
-
-/*
-  Remove any empty objects or arrays
+  Remove any empty objects or arrays when they are direct children of an array
 */
 // removeEmpty :: j -> j
 export const removeEmpty = (json) => {
-  return filterer(R.filter(x => !R.isEmpty(x)), json)
+  return map((x) => R.type(x) === 'Array' ? R.reject(h => R.isEmpty(h), x) : x, json);
 }
 
 /*
@@ -105,11 +88,12 @@ export const map = R.curry((func, json) => {
 */
 // assemble :: j -> j
 export const assemble = R.curry((json, key="$id") => {
+  let idCounter = 1;
   const addId = objectType((obj) => {
     if(obj && obj[key] || R.isEmpty(obj)) return obj;
-    else return R.assoc(key, uniqueId(), obj)
+    else return R.assoc(key, idCounter++, obj)
   }, x => x)
-  return R.compose(removeNull, map)(addId, json)
+  return R.compose(removeEmpty, map)(addId, json)
 })
 
 /*
@@ -118,7 +102,7 @@ export const assemble = R.curry((json, key="$id") => {
 // disassemble :: s -> j
 export const disassemble = (json, key='$id') => {
   const removeId = objectType((obj) => R.dissoc(key, obj), x => x)
-  return R.compose(removeEmpty, removeNull, map)(removeId, json)
+  return R.compose(removeEmpty, map)(removeId, json)
 }
 
 /*
@@ -128,7 +112,7 @@ export const disassemble = (json, key='$id') => {
 // find :: (j -> j) -> j -> j -> j
 export const find = R.curry((f, shape, json) => {
   typeError('find', { expected: 'Function', actual: f });
-  return R.compose(removeNull, map)((x) => R.equals(x, shape) ? f(x) : x, json);
+  return R.compose(removeEmpty, map)((x) => R.equals(x, shape) ? f(x) : x, json);
 });
 
 /*
@@ -138,7 +122,7 @@ export const find = R.curry((f, shape, json) => {
 // findIn :: (j -> j) -> j -> j
 export const findObjWith = curry((f, shape, json) => {
   typeError('findObjWith', { expected: 'Function', actual: f }, { expected: 'Object', actual: shape });
-  return R.compose(removeNull, map)((x) => objContains(shape, x) ? f(x) : x, json)
+  return R.compose(removeEmpty, map)((x) => objContains(shape, x) ? f(x) : x, json)
 });
 
 /*
@@ -148,7 +132,6 @@ export const findObjWith = curry((f, shape, json) => {
 export const filter = (f, json) => {
   typeError('filter', { expected: 'Function', actual: f });
   return removeEmpty(filterer(R.filter(f), json))
-  // return R.compose(removeNull, removeEmpty, R.filter(f), json)
 }
 
 export default {

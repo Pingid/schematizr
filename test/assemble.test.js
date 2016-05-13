@@ -16,6 +16,16 @@ describe('assemble', () => {
     ]
     expect(actual).deep.equal(expected);
   });
+  it('Should keep values equal to null', () => {
+    const actual = assemble({ one: null, two: [null, { three: null }]})
+    const expected = { one: null, $id: 1, two: [null, { three: null, $id: 2 }] };
+    expect(actual).deep.equal(expected);
+  })
+  it('Should keep values equal to undefined', () => {
+    const actual = assemble({ one: undefined, two: [undefined, { three: undefined }]})
+    const expected = { one: undefined, $id: 1, two: [undefined, { three: undefined, $id: 2 }] };
+    expect(actual).deep.equal(expected);
+  })
   // it('Ignore objects with key "other"', () => {
   //   const actual = assemble(testData, ['other'])
   //   const expected = [

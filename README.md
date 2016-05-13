@@ -148,7 +148,7 @@ Filter takes a callback which receives all the values from the JSON literal and 
 ```javascript
 const removeRun = filter(function(value) {
   return value !== '5k run';
-});
+}, data);
 // { todoList: [
 //     { text: 'Exercise',
 //       sublist: [

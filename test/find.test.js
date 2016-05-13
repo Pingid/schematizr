@@ -16,5 +16,8 @@ describe('find', () => {
     ];
     expect(actual).deep.equal(expected);
   });
-
+  it('Shoule throw Error if inproper arguments are give', () => {
+    const throwsMadArgumenterror = () => find(testData, {}, {})
+    expect(throwsMadArgumenterror).to.throw('find expected (Function) instead received (Array)')
+  })
 });

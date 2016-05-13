@@ -16,6 +16,10 @@ describe('map', () => {
     ];
     expect(actual).deep.equal(expected);
   });
+  it('Shoule throw Error if inproper arguments are give', () => {
+    const throwsMadArgumenterror = () => map(testData, x => x)
+    expect(throwsMadArgumenterror).to.throw('map expected (Function) instead received (Array)')
+  })
   describe('mapping over', () => {
     [
       { name: 'null', input: null },
