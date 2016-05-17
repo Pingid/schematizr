@@ -1,6 +1,6 @@
 import _ from 'ramda';
 import { expect, should } from 'chai';
-import { filter } from '../lib/schema'
+import { filter, map } from '../lib/schema'
 
 const testData = [
   { one: '1', two: '2', three: [{ four: '4', five: [{ six: '6' }] }] },

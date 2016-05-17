@@ -1,6 +1,6 @@
 {
   "name": "schematizr",
-  "version": "4.2.5",
+  "version": "4.3.0",
   "description": "A lightweight library built for modifying deeply nested JSON.",
   "main": "lib/schema.js",
   "scripts": {

@@ -90,7 +90,8 @@ export const map = R.curry((func, json) => {
 export const assemble = R.curry((json, key="$id") => {
   let idCounter = 1;
   const addId = objectType((obj) => {
-    if(obj && obj[key] || R.isEmpty(obj)) return obj;
+    if (R.isEmpty(obj)) return obj;
+    else if (obj[key]) return Object.assign({}, obj, { [key]: idCounter++ });
     else return R.assoc(key, idCounter++, obj)
   }, x => x)
   return R.compose(removeEmpty, map)(addId, json)
