@@ -1,4 +1,4 @@
-{
+cd  {
   "name": "schematizr",
   "version": "4.3.0",
   "description": "A lightweight library built for modifying deeply nested JSON.",
@@ -6,9 +6,9 @@
   "scripts": {
     "prebuild": "rm -rf lib && mkdir lib",
     "build": "npm run prebuild && babel -d lib/ src/",
-    "build-watch": "babel --watch -d lib/ src/",
-    "test": "mocha --require babel-core/register test/**/*.test.js",
-    "testing": "mocha --require babel-core/register test/**/*.test.js -w"
+    "build-watch": "npm run prebuild && babel --watch -d lib/ src/",
+    "test": "mocha --require babel-core/register tests/**/*.test.js",
+    "testing": "mocha --require babel-core/register tests/**/*.test.js -w"
   },
   "repository": {
     "type": "git",
