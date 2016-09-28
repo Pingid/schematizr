@@ -1,6 +1,6 @@
 import _ from 'ramda';
 import { expect, should } from 'chai';
-import { deepFilter } from '../lib/index'
+import D, { deepFilter } from '../lib/deepj.min'
 
 const testData = [
   { one: '1', two: '2', three: [{ four: '4', five: [{ six: '6' }] }] },
@@ -24,17 +24,17 @@ describe('deepFilter', () => {
     let actual = [];
     deepFilter((x) => { actual.push(x); return true; }, testData[0]);
     const expected = [
-      { one: null, two:'2', three:[ { four:'4', five:[ { six:'6' } ] } ] },
-      null,
+      { one: '1', two:'2', three:[ { four:'4', five:[ { six:'6' } ] } ] },
+      '1',
       '2',
       [ { four:'4', five:[ { six:'6' } ] } ],
       { four:'4', five:[ { six:'6' } ] },
       '4',
-      { six:'6' },
+      [{ six:'6' }],
       '6',
-      [ { six:'6' } ]
+      { six:'6' },
     ]
-    console.log(JSON.stringify(testData, null, 1));
+    console.log(actual);
     expect(actual).deep.equal(expected);
   });
   // it('should not remove empty objects and arrays even if they are items in an array', () => {

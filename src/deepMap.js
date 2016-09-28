@@ -9,10 +9,10 @@ import map from './internal/map';
 */
 // map :: (j -> j) -> j -> j
 const deepMap = curry((func, json) => {
-  const recursive = curry((f, value) =>
-    typeof value === 'object' ? map(compose(recursive(f), f), value) : value
+  const recurse = curry((f, value) =>
+    typeof value === 'object' ? map(compose(recurse(f), f), value) : value
   );
-  return recursive(func, { json }).json
+  return recurse(func, { json }).json
 })
 
 // const deepMap = curry((func, value) => {

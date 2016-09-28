@@ -18,6 +18,8 @@ export default {
   deepReduce
 }
 
+// export default D;
+
 /*
  Type notations
   j -> JSON literal

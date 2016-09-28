@@ -1,5 +1,5 @@
 import { expect, should } from 'chai';
-import { deepMap } from '../lib/index'
+import { deepMap } from '../lib/deepj'
 
 const testData = [
   { one: null, two: '2', three: [{ four: '4', five: [{ six: '6' }] }] },

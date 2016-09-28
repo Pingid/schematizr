@@ -1,5 +1,5 @@
 import { expect, should } from 'chai';
-import { deepReduce } from '../lib/index'
+import { deepReduce } from '../lib/deepj'
 
 const testData = [
   { one: '1', two: '2', three: [{ four: '4', five: [{ six: '6' }] }] },

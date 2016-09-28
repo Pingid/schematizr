@@ -9,7 +9,8 @@ import filter from './internal/filter';
 */
 // deepFilter :: (j -> Bool) -> j -> j
 const deepFilter = curry((f, json) => {
-  return deepMap(value => typeof value === 'object' ? filter(f, value) : value, json)
+  console.log(filter(f, json));
+  return deepMap(value => typeof value === 'object' ? filter(f, value) : value,  filter(f, json))
 })
 
 export default deepFilter;

@@ -1,12 +1,10 @@
-cd  {
+{
   "name": "schematizr",
   "version": "4.3.0",
   "description": "A lightweight library built for modifying deeply nested JSON.",
   "main": "lib/schema.js",
   "scripts": {
-    "prebuild": "rm -rf lib && mkdir lib",
-    "build": "npm run prebuild && babel -d lib/ src/",
-    "build-watch": "npm run prebuild && babel --watch -d lib/ src/",
+    "start": "gulp",
     "test": "mocha --require babel-core/register tests/**/*.test.js",
     "testing": "mocha --require babel-core/register tests/**/*.test.js -w"
   },
@@ -30,10 +28,11 @@ cd  {
     "ramda": "0.20.1"
   },
   "devDependencies": {
-    "babel-cli": "6.4.5",
-    "babel-preset-es2015": "6.3.13",
-    "babel-preset-stage-0": "6.3.13",
+    "babelify": "7.3.0",
+    "browserify": "13.1.0",
     "chai": "3.4.1",
-    "mocha": "2.3.4"
+    "mocha": "2.3.4",
+    "vinyl-buffer": "1.0.0",
+    "vinyl-source-stream": "1.1.0"
   }
 }
